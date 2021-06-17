@@ -1,4 +1,7 @@
 #lang racket
 
+(define (read-todo-file in)
+  (display (port->string in)))
+
 (module* main #f
-  (display "Hello from Alas!"))
+  (call-with-input-file "todo.md" read-todo-file))
