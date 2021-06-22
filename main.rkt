@@ -6,12 +6,7 @@
   (display (port->string in)))
 
 (define (format-day-title date)
-  (string-append "## "
-                 (~a (->year date))
-                 "-"
-                 (~a (->month date) #:min-width 2 #:align 'right #:left-pad-string "0")
-                 "-"
-                 (~a (->day date) #:min-width 2 #:align 'right #:left-pad-string "0")))
+  (string-append "## " (~t date "y-MM-dd")))
 
 (module* main #f
   (call-with-input-file "todo.md" read-todo-file))
