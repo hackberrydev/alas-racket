@@ -9,7 +9,7 @@
   (string-append "## " (~t date "y-MM-dd")))
 
 (module* main #f
-  (call-with-input-file "todo.md" read-todo-file))
+  (call-with-input-file "examples/todo.md" read-todo-file))
 
 (module+ test
   (require rackunit)
