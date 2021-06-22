@@ -13,4 +13,7 @@
 
 (module+ test
   (require rackunit)
-  (check-equal? (format-day-title (date 2021 6 21)) "## 2021-06-21"))
+
+  (test-case
+    "format-day-title"
+    (check-equal? (format-day-title (date 2021 6 21)) "## 2021-06-21")))
