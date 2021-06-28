@@ -2,6 +2,9 @@
 
 (require gregor)
 
+(struct day (date tasks))
+(struct task (title body done))
+
 (define (read-todo-file in)
   (display (port->string in)))
 
