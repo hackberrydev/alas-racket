@@ -1,12 +1,10 @@
 #lang racket
 
-(require gregor)
+(require gregor
+         "file-repository.rkt")
 
 (struct day (date tasks))
 (struct task (title body done))
-
-(define (read-todo-file in)
-  (display (port->string in)))
 
 (define (format-day-title date)
   (string-append "## " (~t date "y-MM-dd")))
