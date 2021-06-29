@@ -1,13 +1,16 @@
 #lang racket
 
-(require gregor)
+(require gregor
+         "entities.rkt")
 
-(define (format-day-title date)
-  (string-append "## " (~t date "y-MM-dd")))
+(define (day-title day)
+  (string-append "## " (~t (day-date day) "y-MM-dd")))
 
 (module+ test
   (require rackunit)
 
   (test-case
-    "format-day-title"
-    (check-equal? (format-day-title (date 2021 6 21)) "## 2021-06-21")))
+    "day-title"
+    (check-equal?
+      (day-title (day (date 2021 6 21) '() 1 false))
+      "## 2021-06-21")))
