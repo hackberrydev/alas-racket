@@ -3,9 +3,6 @@
 (require gregor
          "file-repository.rkt")
 
-(struct day (date tasks))
-(struct task (title body done))
-
 (define (format-day-title date)
   (string-append "## " (~t date "y-MM-dd")))
 
