@@ -6,8 +6,19 @@
 (define (day-title day)
   (string-append "## " (~t (day-date day) "y-MM-dd, EEEE")))
 
+(define (build-day line)
+  (day (substring line 3 11) (list) 0 #f))
+
+(define (day-line? line) (string-prefix? line "## "))
+
 (define (load-todo port)
-  (list))
+  (define (load-line port days)
+    (let ([line (read-line port)])
+      (cond
+        [(eof-object? line) days]
+        [(day-line? line) (load-line port (cons (build-day line) days))]
+        [else (load-line port days)])))
+  (load-line port (list)))
 
 (module+ test
   (require rackunit)
