@@ -7,7 +7,7 @@
   (string-append "## " (~t (day-date day) "y-MM-dd, EEEE")))
 
 (define (build-day line)
-  (day (substring line 3 11) (list) 0 #f))
+  (day (iso8601->date (substring line 3 13)) (list) 0 #f))
 
 (define (day-line? line) (string-prefix? line "## "))
 
@@ -15,7 +15,7 @@
   (define (load-line port days)
     (let ([line (read-line port)])
       (cond
-        [(eof-object? line) days]
+        [(eof-object? line) (reverse days)]
         [(day-line? line) (load-line port (cons (build-day line) days))]
         [else (load-line port days)])))
   (load-line port (list)))
@@ -39,5 +39,9 @@
                                 "- [x] Review open pull requests\n"
                                 "- [x] Fix the flaky test")]
            [port (open-input-string todo)]
-           [days (load-todo port)])
-      (check-equal? (length days) 2))))
+           [days (load-todo port)]
+           [day-1 (list-ref days 0)]
+           [day-2 (list-ref days 1)])
+      (check-equal? (length days) 2)
+      (check-equal? (day-date day-1) (date 2020 8 1))
+      (check-equal? (day-date day-2) (date 2020 7 31)))))
