@@ -50,5 +50,7 @@
       (check-equal? (length days) 2)
       (check-equal? (day-date day-1) (date 2020 8 1))
       (check-equal? (day-line-number day-1) 3)
+      (check-false (day-changed day-1))
       (check-equal? (day-date day-2) (date 2020 7 31))
-      (check-equal? (day-line-number day-2) 8))))
+      (check-equal? (day-line-number day-2) 8)
+      (check-false (day-changed day-2)))))
