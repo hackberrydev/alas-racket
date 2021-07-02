@@ -6,8 +6,12 @@
 (define (day-title day)
   (string-append "## " (~t (day-date day) "y-MM-dd, EEEE")))
 
-(define (build-day line)
-  (day (iso8601->date (substring line 3 13)) (list) 0 #f))
+(define (build-day port line)
+  (let-values ([(line-number column position) (port-next-location port)])
+    (day (iso8601->date (substring line 3 13))
+         (list)
+         (- line-number 1)
+         #f)))
 
 (define (day-line? line) (string-prefix? line "## "))
 
@@ -16,8 +20,9 @@
     (let ([line (read-line port)])
       (cond
         [(eof-object? line) (reverse days)]
-        [(day-line? line) (load-line port (cons (build-day line) days))]
+        [(day-line? line) (load-line port (cons (build-day port line) days))]
         [else (load-line port days)])))
+  (port-count-lines! port)
   (load-line port (list)))
 
 (module+ test
@@ -44,4 +49,6 @@
            [day-2 (list-ref days 1)])
       (check-equal? (length days) 2)
       (check-equal? (day-date day-1) (date 2020 8 1))
-      (check-equal? (day-date day-2) (date 2020 7 31)))))
+      (check-equal? (day-line-number day-1) 3)
+      (check-equal? (day-date day-2) (date 2020 7 31))
+      (check-equal? (day-line-number day-2) 8))))
