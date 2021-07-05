@@ -25,6 +25,9 @@
   (port-count-lines! port)
   (load-line port (list)))
 
+(define (save-todo days port)
+  null)
+
 (module+ test
   (require rackunit)
 
@@ -53,4 +56,29 @@
       (check-false (day-changed day-1))
       (check-equal? (day-date day-2) (date 2020 7 31))
       (check-equal? (day-line-number day-2) 8)
-      (check-false (day-changed day-2)))))
+      (check-false (day-changed day-2))))
+
+  (test-case
+    "save-todo"
+    (let* ([todo (string-append "# Main TODO\n\n"
+                                "## 2020-08-01, Saturday\n\n"
+                                "- [ ] Develop photos\n"
+                                "- [x] Pay bills\n\n"
+                                "## 2020-07-31, Friday\n\n"
+                                "- [x] Review open pull requests\n"
+                                "- [x] Fix the flaky test")]
+           [port (open-output-string)]
+           [days (list (day (date 2020 8 2) (list) 3 #t)
+                       (day (date 2020 8 1) (list) 3 #f)
+                       (day (date 2020 7 31) (list) 8 #f))])
+      (display todo port)
+      (save-todo days port)
+      (check-equal? (get-output-string port)
+                    (string-append "# Main TODO\n\n"
+                                   "## 2020-08-01, Saturday\n\n"
+                                   "## 2020-08-01, Saturday\n\n"
+                                   "- [ ] Develop photos\n"
+                                   "- [x] Pay bills\n\n"
+                                   "## 2020-07-31, Friday\n\n"
+                                   "- [x] Review open pull requests\n"
+                                   "- [x] Fix the flaky test")))))
