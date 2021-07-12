@@ -3,9 +3,6 @@
 (require gregor
          "entities.rkt")
 
-(define (day-title day)
-  (string-append "## " (~t (day-date day) "y-MM-dd, EEEE")))
-
 (define (build-day line line-number column position)
   (day (iso8601->date (substring line 3 13))
        (list)
@@ -42,12 +39,6 @@
 
 (module+ test
   (require rackunit)
-
-  (test-case
-    "day-title"
-    (check-equal?
-      (day-title (day (date 2021 6 21) '() 1 0 false))
-      "## 2021-06-21, Monday"))
 
   (test-case
     "load-todo"
