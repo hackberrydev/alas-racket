@@ -15,7 +15,9 @@
        #f))
 
 (define (parse todo)
-  (define (parse-line todo-lines days line-number)
+  (let parse-line ([todo-lines (string-split todo "\n")]
+                   [days (list)]
+                   [line-number 0])
     (if (empty? todo-lines)
       (reverse days)
       (let ([line (first todo-lines)]
@@ -26,11 +28,13 @@
                                todo-lines
                                (cons (build-day line line-number) days)
                                line-number)]
-          [else (parse-line todo-lines days line-number)]))))
-  (parse-line (string-split todo "\n") (list) 0))
+          [else (parse-line todo-lines days line-number)])))))
 
 (define (serialize days todo)
-  (define (do-something days todo-lines new-todo-lines current-line)
+  (let insert-days ([days days]
+                    [todo-lines (string-split todo "\n")]
+                    [new-todo-lines (list)]
+                    [current-line 0])
     (if (empty? todo-lines)
       (string-join (reverse new-todo-lines) "\n")
       (let ([current-line (+ current-line 1)]
@@ -38,15 +42,14 @@
             [line (first todo-lines)]
             [todo-lines (rest todo-lines)])
         (if (= (day-line-number day) current-line)
-          (do-something (rest days)
-                        todo-lines
-                        (cons line (cons (day-title day) new-todo-lines))
-                        current-line)
-          (do-something days
-                        todo-lines
-                        (cons line new-todo-lines)
-                        current-line)))))
-  (do-something days (string-split todo "\n") (list) 0))
+          (insert-days (rest days)
+                       todo-lines
+                       (cons line (cons (day-title day) new-todo-lines))
+                       current-line)
+          (insert-days days
+                       todo-lines
+                       (cons line new-todo-lines)
+                       current-line))))))
 
 (module+ test
   (require rackunit)
