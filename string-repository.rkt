@@ -46,7 +46,7 @@
         (if (insert-day? day current-line)
           (insert-days (rest days)
                        todo-lines
-                       (cons line (cons (day-title day) new-todo-lines))
+                       (append (list line (day-title day)) new-todo-lines)
                        current-line)
           (insert-days days
                        todo-lines
