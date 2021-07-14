@@ -31,6 +31,8 @@
           [else (parse-line todo-lines days line-number)])))))
 
 (define (serialize days todo)
+  (define (insert-day? day current-line)
+    (= (day-line-number day) current-line))
   (let insert-days ([days days]
                     [todo-lines (string-split todo "\n")]
                     [new-todo-lines (list)]
@@ -41,7 +43,7 @@
             [day (first days)]
             [line (first todo-lines)]
             [todo-lines (rest todo-lines)])
-        (if (= (day-line-number day) current-line)
+        (if (insert-day? day current-line)
           (insert-days (rest days)
                        todo-lines
                        (cons line (cons (day-title day) new-todo-lines))
