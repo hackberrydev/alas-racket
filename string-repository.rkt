@@ -31,27 +31,24 @@
           [else (parse-line todo-lines days line-number)])))))
 
 (define (serialize days todo)
-  (define (insert-day? day current-line)
-    (= (day-line-number day) current-line))
+  (define (insert-day? days current-line)
+    (and (not (empty? days))
+         (= (day-line-number (first days)) current-line)))
   (let insert-days ([days days]
                     [todo-lines (string-split todo "\n")]
                     [new-todo-lines (list)]
-                    [current-line 0])
+                    [current-line 1])
     (if (empty? todo-lines)
       (string-join (reverse new-todo-lines) "\n")
-      (let ([current-line (+ current-line 1)]
-            [day (first days)]
-            [line (first todo-lines)]
-            [todo-lines (rest todo-lines)])
-        (if (insert-day? day current-line)
-          (insert-days (rest days)
-                       todo-lines
-                       (append (list line (day-title day)) new-todo-lines)
-                       current-line)
-          (insert-days days
-                       todo-lines
-                       (cons line new-todo-lines)
-                       current-line))))))
+      (if (insert-day? days current-line)
+        (insert-days (rest days)
+                     todo-lines
+                     (cons (day-title (first days)) new-todo-lines)
+                     current-line)
+        (insert-days days
+                     (rest todo-lines)
+                     (cons (first todo-lines) new-todo-lines)
+                     (+ current-line 1))))))
 
 (module+ test
   (require rackunit)
@@ -91,11 +88,11 @@
                                 "## 2020-07-31, Friday\n\n"
                                 "- [x] Review open pull requests\n"
                                 "- [x] Fix the flaky test")]
-           [days (list (day (date 2020 8 2) (list) 3 #t)
-                       (day (date 2020 8 1) (list) 3 #f)
-                       (day (date 2020 7 31) (list) 8 #f))])
+           [days (list (day (date 2020 8 3) (list) 3 #t)
+                       (day (date 2020 8 2) (list) 3 #t))])
       (check-equal? (serialize days todo)
                     (string-append "# Main TODO\n\n"
+                                   "## 2020-08-03, Monday\n\n"
                                    "## 2020-08-02, Sunday\n\n"
                                    "## 2020-08-01, Saturday\n\n"
                                    "- [ ] Develop photos\n"
