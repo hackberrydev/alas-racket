@@ -3,8 +3,13 @@
 (require gregor
          "entities.rkt")
 
-(define (generate-days from-date to-date)
-  (list))
+(define (generate-days from-date to-date line-number)
+  (let generate-days-list ([days (list)]
+                           [from-date (+days from-date 1)])
+    (if (date<=? from-date to-date)
+      (generate-days-list (cons (day from-date (list) line-number #t) days)
+                          (+days from-date 1))
+      days)))
 
 (define (insert-days days date)
   days)
@@ -14,7 +19,7 @@
 
   (test-case
     "generate-days"
-    (let* ([days (generate-days (date 2020 8 3) (date 2020 8 4))]
+    (let* ([days (generate-days (date 2020 8 3) (date 2020 8 4) 12)]
            [day-1 (first days)])
       (check-equal? (length days) 1)
       (check-equal? (day-date day-1) (date 2020 8 4))))
