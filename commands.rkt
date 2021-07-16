@@ -12,7 +12,9 @@
       days)))
 
 (define (insert-days days date)
-  days)
+  (let ([day (first days)])
+    (append (generate-days (day-date day) date (day-line-number day))
+            days)))
 
 (module+ test
   (require rackunit)
