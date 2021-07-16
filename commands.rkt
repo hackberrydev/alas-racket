@@ -12,9 +12,11 @@
       days)))
 
 (define (insert-days days date)
-  (let ([day (first days)])
-    (append (generate-days (day-date day) date (day-line-number day))
-            days)))
+  (if (empty? days)
+    (generate-days (-days date 1) date 1)
+    (let ([day (first days)])
+      (append (generate-days (day-date day) date (day-line-number day))
+              days))))
 
 (module+ test
   (require rackunit)
@@ -35,4 +37,10 @@
       (check-equal? (length new-days) 3)
       (check-equal? (day-date day-1) (date 2020 8 4))
       (check-equal? (day-line-number day-1) 3)
-      (check-true (day-changed day-1)))))
+      (check-true (day-changed day-1))))
+
+  (test-case
+    "insert-days with empty days list"
+    (let ([days (insert-days (list) (date 2020 8 4))])
+      (check-equal? (length days) 1)
+      (check-equal? (day-date (first days)) (date 2020 8 4)))))
