@@ -18,6 +18,9 @@
       (append (generate-days (day-date day) date (day-line-number day))
               days))))
 
+(define (run-commands commands-and-arguments todo)
+  todo)
+
 (module+ test
   (require rackunit)
 
@@ -43,4 +46,26 @@
     "insert-days with empty days list"
     (let ([days (insert-days (list) (date 2020 8 4))])
       (check-equal? (length days) 1)
-      (check-equal? (day-date (first days)) (date 2020 8 4)))))
+      (check-equal? (day-date (first days)) (date 2020 8 4))))
+
+  (test-case
+    "run-commands"
+    (let* ([todo (string-append "# Main TODO\n\n"
+                                "## 2020-08-01, Saturday\n\n"
+                                "- [ ] Develop photos\n"
+                                "- [x] Pay bills\n\n"
+                                "## 2020-07-31, Friday\n\n"
+                                "- [x] Review open pull requests\n"
+                                "- [x] Fix the flaky test")]
+           [new-todo (run-commands (list (list insert-days (date 2020 8 3)))
+                                   todo)])
+      (check-equal? new-todo
+                    (string-append "# Main TODO\n\n"
+                                   "## 2020-08-03, Monday\n\n"
+                                   "## 2020-08-02, Sunday\n\n"
+                                   "## 2020-08-01, Saturday\n\n"
+                                   "- [ ] Develop photos\n"
+                                   "- [x] Pay bills\n\n"
+                                   "## 2020-07-31, Friday\n\n"
+                                   "- [x] Review open pull requests\n"
+                                   "- [x] Fix the flaky test")))))
