@@ -3,6 +3,9 @@
 (require gregor
          "entities.rkt")
 
+(provide parse
+         serialize)
+
 (define (day-title day)
   (string-append "## " (~t (day-date day) "y-MM-dd, EEEE") "\n"))
 

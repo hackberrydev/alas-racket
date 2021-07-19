@@ -1,7 +1,8 @@
 #lang racket
 
 (require gregor
-         "entities.rkt")
+         "entities.rkt"
+         "string-repository.rkt")
 
 (define (generate-days from-date to-date line-number)
   (let generate-days-list ([days (list)]
@@ -19,7 +20,14 @@
               days))))
 
 (define (run-commands commands-and-arguments todo)
-  todo)
+  (let* ([days (parse todo)]
+         [all-days (foldl (lambda (command-and-arguments days)
+                        (let ([command (first command-and-arguments)]
+                              [arguments (rest command-and-arguments)])
+                          (apply command (cons days arguments))))
+                      days
+                      commands-and-arguments)])
+    (serialize (filter day-changed all-days) todo)))
 
 (module+ test
   (require rackunit)
