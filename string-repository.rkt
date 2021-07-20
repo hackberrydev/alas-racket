@@ -17,6 +17,7 @@
        line-number
        #f))
 
+; Public: Parses todo as a String into a list of day entities.
 (define (parse todo)
   (let parse-line ([todo-lines (string-split todo "\n")]
                    [days (list)]
@@ -33,6 +34,8 @@
                                line-number)]
           [else (parse-line todo-lines days line-number)])))))
 
+; Public: Serialize a list od day entities into a String. All days are
+; serialized, so the collection needs to include only *changed* days.
 (define (serialize days todo)
   (define (insert-day? days current-line)
     (and (not (empty? days))

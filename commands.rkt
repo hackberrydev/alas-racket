@@ -4,6 +4,9 @@
          "entities.rkt"
          "string-repository.rkt")
 
+(provide run-commands
+         insert-days)
+
 (define (generate-days from-date to-date line-number)
   (let generate-days-list ([days (list)]
                            [from-date (+days from-date 1)])
@@ -12,6 +15,12 @@
                           (+days from-date 1))
       days)))
 
+; Public: Insert new days into the list of day entities.
+;
+; days - The list of day entities.
+; date - The date up to which new days will be generated.
+;
+; Returns a new list of days.
 (define (insert-days days date)
   (if (empty? days)
     (generate-days (-days date 1) date 1)
@@ -19,6 +28,15 @@
       (append (generate-days (day-date day) date (day-line-number day))
               days))))
 
+; Public: Runs commands on a todo.
+;
+; commands-and-arguments - A list of lists. Each list has a command function as
+;                          the first item and arguments as other items.
+;                          Arguments will be passed to the function.
+; todo                   - The string with the current version of a todo.
+;
+; Returns a new String that contains a new version of a todo that was result of
+; applying commands on the original todo.
 (define (run-commands commands-and-arguments todo)
   (let* ([days (parse todo)]
          [all-days (foldl (lambda (command-and-arguments days)
