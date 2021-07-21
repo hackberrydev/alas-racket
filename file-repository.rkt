@@ -1,6 +1,6 @@
 #lang racket
 
-(provide read-todo-file)
+(provide load-todo-file)
 
-(define (read-todo-file in)
-  (display (port->string in)))
+(define (load-todo-file path)
+  (call-with-input-file path port->string))
