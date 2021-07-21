@@ -1,8 +1,11 @@
 #lang racket
 
-(require "file-repository.rkt")
+(require gregor
+         "file-repository.rkt"
+         "commands.rkt")
 
 (module* main #f
-  (let* ([todo (load-todo-file "examples/todo.md")]
-         [new-todo (string-append todo "\n\nThe End")])
+  (let* ([commands (list (list insert-days (today)))]
+         [todo (load-todo-file "examples/todo.md")]
+         [new-todo (run-commands commands todo)])
     (save-todo-file new-todo "examples/todo.md")))
