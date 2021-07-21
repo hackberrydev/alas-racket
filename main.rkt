@@ -3,4 +3,6 @@
 (require "file-repository.rkt")
 
 (module* main #f
-  (display (load-todo-file "examples/todo.md")))
+  (let* ([todo (load-todo-file "examples/todo.md")]
+         [new-todo (string-append todo "\n\nThe End")])
+    (save-todo-file new-todo "examples/todo.md")))
