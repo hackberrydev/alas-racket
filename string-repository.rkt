@@ -9,7 +9,7 @@
 (define (day-title day)
   (string-append "## " (~t (day-date day) "y-MM-dd, EEEE") "\n"))
 
-(define (day-title? line) (string-prefix? line "## "))
+(define (day-title? line) (string-prefix? line "## 2"))
 
 (define (build-day line line-number)
   (day (iso8601->date (substring line 3 13))
@@ -68,6 +68,8 @@
   (test-case
     "parse"
     (let* ([todo (string-append "# Main TODO\n\n"
+                                "## Inbox"
+                                "- [ ] Fix the lamp\n\n"
                                 "## 2020-08-01, Saturday\n\n"
                                 "- [ ] Develop photos\n"
                                 "- [x] Pay bills\n\n"
@@ -79,10 +81,10 @@
            [day-2 (list-ref days 1)])
       (check-equal? (length days) 2)
       (check-equal? (day-date day-1) (date 2020 8 1))
-      (check-equal? (day-line-number day-1) 3)
+      (check-equal? (day-line-number day-1) 5)
       (check-false (day-changed day-1))
       (check-equal? (day-date day-2) (date 2020 7 31))
-      (check-equal? (day-line-number day-2) 8)
+      (check-equal? (day-line-number day-2) 10)
       (check-false (day-changed day-2))))
 
   (test-case
