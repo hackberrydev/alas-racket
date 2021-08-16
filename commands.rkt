@@ -22,16 +22,15 @@
 ;
 ; Returns a new list of days.
 (define (insert-days days date)
+  (define (day-after-date? day)
+    (date>? (day-date day) date))
   (if (empty? days)
     (generate-days (-days date 1) date 1)
-    (let*-values ([(days-before days-after) (splitf-at
-                                              days
-                                              (lambda (d)
-                                                (date>? (day-date d) date)))]
-                  [(day) (first days-after)])
-      (append days-before
+    (let*-values ([(days-after days-before) (splitf-at days day-after-date?)]
+                  [(day) (first days-before)])
+      (append days-after
               (generate-days (day-date day) date (day-line-number day))
-              days-after))))
+              days-before))))
 
 ; Public: Runs commands on a todo.
 ;
