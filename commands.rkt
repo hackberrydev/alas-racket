@@ -84,6 +84,25 @@
       (check-true (day-changed day-2))))
 
   (test-case
+    "insert-days with a day that already exists"
+    (let* ([days (list (day (date 2020 8 4) (list) 3 #f)
+                       (day (date 2020 8 2) (list) 6 #f))]
+           [new-days (insert-days days (date 2020 8 5))]
+           [day-1 (list-ref new-days 0)]
+           [day-2 (list-ref new-days 1)]
+           [day-3 (list-ref new-days 2)])
+      (check-equal? (length new-days) 4)
+      (check-equal? (day-date day-1) (date 2020 8 5))
+      (check-equal? (day-line-number day-2) 3)
+      (check-true (day-changed day-1))
+      (check-equal? (day-date day-2) (date 2020 8 4))
+      (check-equal? (day-line-number day-2) 3)
+      (check-false (day-changed day-2))
+      (check-equal? (day-date day-3) (date 2020 8 3))
+      (check-equal? (day-line-number day-3) 6)
+      (check-true (day-changed day-3))))
+
+  (test-case
     "insert-days with empty days list"
     (let ([days (insert-days (list) (date 2020 8 4))])
       (check-equal? (length days) 1)
