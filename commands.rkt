@@ -7,30 +7,29 @@
 (provide run-commands
          insert-days)
 
-(define (generate-days from-date to-date line-number)
-  (let generate-days-list ([days (list)]
-                           [from-date (+days from-date 1)])
-    (if (date<=? from-date to-date)
-      (generate-days-list (cons (day from-date (list) line-number #t) days)
-                          (+days from-date 1))
-      days)))
+(define (insert-day days date)
+  (define (day-after-date? day)
+    (date>? (day-date day) date))
+  (let*-values ([(days-after days-before) (splitf-at days day-after-date?)])
+    (if (empty? days-before)
+      (list (day date (list) 1 #t))
+      (if (date=? (day-date (first days-before)) date)
+        days
+        (append days-after
+                (list (day date (list) (day-line-number (first days-before)) #t))
+                days-before)))))
 
 ; Public: Insert new days into the list of day entities.
 ;
-; days - The list of day entities.
-; date - The date up to which new days will be generated.
+; days  - The list of day entities.
+; date  - The date up to which new days will be generated.
+; today - Date.
 ;
 ; Returns a new list of days.
-(define (insert-days days date)
-  (define (day-after-date? day)
-    (date>? (day-date day) date))
-  (if (empty? days)
-    (generate-days (-days date 1) date 1)
-    (let*-values ([(days-after days-before) (splitf-at days day-after-date?)]
-                  [(day) (first days-before)])
-      (append days-after
-              (generate-days (day-date day) date (day-line-number day))
-              days-before))))
+(define (insert-days days date today)
+  (if (date<? date today)
+    days
+    (insert-days (insert-day days date) (-days date 1) today)))
 
 ; Public: Runs commands on a todo.
 ;
@@ -55,17 +54,10 @@
   (require rackunit)
 
   (test-case
-    "generate-days"
-    (let* ([days (generate-days (date 2020 8 3) (date 2020 8 4) 12)]
-           [day-1 (first days)])
-      (check-equal? (length days) 1)
-      (check-equal? (day-date day-1) (date 2020 8 4))))
-
-  (test-case
     "insert-days"
     (let* ([days (list (day (date 2020 8 3) (list) 3 #f)
                        (day (date 2020 8 2) (list) 6 #f))]
-           [new-days (insert-days days (date 2020 8 4))]
+           [new-days (insert-days days (date 2020 8 4) (date 2020 8 4))]
            [day-1 (first new-days)])
       (check-equal? (length new-days) 3)
       (check-equal? (day-date day-1) (date 2020 8 4))
@@ -76,7 +68,7 @@
     "insert-days with a day in the middle"
     (let* ([days (list (day (date 2020 8 5) (list) 3 #f)
                        (day (date 2020 8 2) (list) 6 #f))]
-           [new-days (insert-days days (date 2020 8 4))]
+           [new-days (insert-days days (date 2020 8 4) (date 2020 8 2))]
            [day-2 (list-ref new-days 1)])
       (check-equal? (length new-days) 4)
       (check-equal? (day-date day-2) (date 2020 8 4))
@@ -87,7 +79,7 @@
     "insert-days with a day that already exists"
     (let* ([days (list (day (date 2020 8 4) (list) 3 #f)
                        (day (date 2020 8 2) (list) 6 #f))]
-           [new-days (insert-days days (date 2020 8 5))]
+           [new-days (insert-days days (date 2020 8 5) (date 2020 8 2))]
            [day-1 (list-ref new-days 0)]
            [day-2 (list-ref new-days 1)]
            [day-3 (list-ref new-days 2)])
@@ -104,7 +96,7 @@
 
   (test-case
     "insert-days with empty days list"
-    (let ([days (insert-days (list) (date 2020 8 4))])
+    (let ([days (insert-days (list) (date 2020 8 4) (date 2020 8 4))])
       (check-equal? (length days) 1)
       (check-equal? (day-date (first days)) (date 2020 8 4))))
 
@@ -117,8 +109,8 @@
                                 "## 2020-07-31, Friday\n\n"
                                 "- [x] Review open pull requests\n"
                                 "- [x] Fix the flaky test")]
-           [new-todo (run-commands (list (list insert-days (date 2020 8 3)))
-                                   todo)])
+           [commands (list (list insert-days (date 2020 8 3) (date 2020 8 2)))]
+           [new-todo (run-commands commands todo)])
       (check-equal? new-todo
                     (string-append "# Main TODO\n\n"
                                    "## 2020-08-03, Monday\n\n"
