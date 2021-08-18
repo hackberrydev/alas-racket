@@ -5,7 +5,7 @@
          "commands.rkt")
 
 (module+ main
-  (let* ([commands (list (list insert-days (today)))]
+  (let* ([commands (list (list insert-days (today) (today)))]
          [file-path (vector-ref (current-command-line-arguments) 0)]
          [todo (load-todo-file file-path)]
          [new-todo (run-commands commands todo)])
