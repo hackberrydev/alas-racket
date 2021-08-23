@@ -1,9 +1,25 @@
 #lang racket
 
+; The module implements a command for inserting new days into an existing list
+; of days.
+
+(provide
+  ; Insert new days into the list of day entities.
+  ;
+  ; (insert-days days date today)
+  ;
+  ; days  - The list of day entities.
+  ; date  - The date up to which new days will be generated.
+  ; today - Date.
+  ;
+  ; Returns a new list of days.
+  insert-days)
+
+; ——————————————————————————————————————————————————————————————————————————————
+; Import and implementation
+
 (require gregor
          "../entities.rkt")
-
-(provide insert-days)
 
 (define (insert-day days date)
   (define (day-after-date? day)
@@ -34,18 +50,13 @@
 (define (build-first-day date)
   (list (day date (list) 1 #t)))
 
-; Public: Insert new days into the list of day entities.
-;
-; days  - The list of day entities.
-; date  - The date up to which new days will be generated.
-; today - Date.
-;
-; Returns a new list of days.
 (define (insert-days days date today)
   (if (empty? days)
     (build-first-day date)
     (insert-days-in-list days date today)))
 
+; ——————————————————————————————————————————————————————————————————————————————
+; Tests
 
 (module+ test
   (require rackunit)
