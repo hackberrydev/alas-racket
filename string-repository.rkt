@@ -1,10 +1,21 @@
 #lang racket
 
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; This module implements functions for parsing a TODO string to entities and serializing entities to
+;; a string.
+
+(provide
+  ;; Parse a string to entities.
+  parse
+  ;; Serialize entities to a string. All passed days are serialized, so the collection needs to incled
+  ;; only changed days.
+  serialize)
+
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Import and implementation
+
 (require gregor
          "entities.rkt")
-
-(provide parse
-         serialize)
 
 (define (day-title day)
   (string-append "## " (~t (day-date day) "y-MM-dd, EEEE") "\n"))
@@ -17,7 +28,6 @@
        line-number
        #f))
 
-; Public: Parses todo as a String into a list of day entities.
 (define (parse todo)
   (let parse-line ([todo-lines (string-split todo "\n")]
                    [days (list)]
@@ -34,8 +44,6 @@
                                line-number)]
           [else (parse-line todo-lines days line-number)])))))
 
-; Public: Serialize a list od day entities into a String. All days are
-; serialized, so the collection needs to include only *changed* days.
 (define (serialize days todo)
   (define (insert-day? days current-line)
     (and (not (empty? days))
@@ -55,6 +63,9 @@
                      (rest todo-lines)
                      (cons (first todo-lines) new-todo-lines)
                      (+ current-line 1))))))
+
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Tests
 
 (module+ test
   (require rackunit)

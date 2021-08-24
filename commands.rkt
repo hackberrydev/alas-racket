@@ -1,22 +1,35 @@
 #lang racket
 
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; The module implements functions for running commands. It also provides all commands, so to use
+;; commands, it's enough to require only this module.
+
+(provide
+  ;; Runs commands on a todo.
+  ;;
+  ;; (run-commands
+  ;;   (list (list insert-days date today))
+  ;;   todo)
+  ;;
+  ;; commands-and-arguments - A list of lists. Each list has a command function as
+  ;;                          the first item and arguments as other items.
+  ;;                          Arguments will be passed to the function.
+  ;; todo                   - The string with the current version of a todo.
+  ;;
+  ;; Returns a new String that contains a new version of a todo that was result of
+  ;; applying commands on the original todo.
+  run-commands
+  ;; Available commands:
+  insert-days)
+
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Import and implementation
+
 (require gregor
          "entities.rkt"
          "string-repository.rkt"
          "commands/insert-days.rkt")
 
-(provide run-commands
-         insert-days)
-
-; Public: Runs commands on a todo.
-;
-; commands-and-arguments - A list of lists. Each list has a command function as
-;                          the first item and arguments as other items.
-;                          Arguments will be passed to the function.
-; todo                   - The string with the current version of a todo.
-;
-; Returns a new String that contains a new version of a todo that was result of
-; applying commands on the original todo.
 (define (run-commands commands-and-arguments todo)
   (let* ([days (parse todo)]
          [all-days (foldl (lambda (command-and-arguments days)
@@ -26,6 +39,9 @@
                       days
                       commands-and-arguments)])
     (serialize (filter day-changed all-days) todo)))
+
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Tests
 
 (module+ test
   (require rackunit)

@@ -1,7 +1,16 @@
 #lang racket
 
-(provide load-todo-file
-         save-todo-file)
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; The module implements functions for saving and loading a todo from a file.
+
+(provide
+  ;; Load a todo file to a string.
+  load-todo-file
+  ;; Save a string to a file.
+  save-todo-file)
+
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Import and implementation
 
 (define (load-todo-file path)
   (call-with-input-file path port->string))

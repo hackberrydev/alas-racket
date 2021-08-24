@@ -1,22 +1,22 @@
 #lang racket
 
-; The module implements a command for inserting new days into an existing list
-; of days.
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; The module implements a command for inserting new days into an existing list of days.
 
 (provide
-  ; Insert new days into the list of day entities.
-  ;
-  ; (insert-days days date today)
-  ;
-  ; days  - The list of day entities.
-  ; date  - The date up to which new days will be generated.
-  ; today - Date.
-  ;
-  ; Returns a new list of days.
+  ;; Insert new days into the list of day entities.
+  ;;
+  ;; (insert-days days date today)
+  ;;
+  ;; days  - The list of day entities.
+  ;; date  - The date up to which new days will be generated.
+  ;; today - Date.
+  ;;
+  ;; Returns a new list of days.
   insert-days)
 
-; ——————————————————————————————————————————————————————————————————————————————
-; Import and implementation
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Import and implementation
 
 (require gregor
          "../entities.rkt")
@@ -34,14 +34,14 @@
                 (list (day date (list) (day-line-number adjacent-day) #t))
                 days-before)))))
 
-; Private: Insert new days into the list of day entities. The list must be not
-;          empty.
-;
-; days  - The list of day entities.
-; date  - The date up to which new days will be generated.
-; today - Date.
-;
-; Returns a new list of days.
+;; Private: Insert new days into the list of day entities. The list must be not
+;;          empty.
+;;
+;; days  - The list of day entities.
+;; date  - The date up to which new days will be generated.
+;; today - Date.
+;;
+;; Returns a new list of days.
 (define (insert-days-in-list days date today)
   (if (date<? date today)
     days
@@ -55,8 +55,8 @@
     (build-first-day date)
     (insert-days-in-list days date today)))
 
-; ——————————————————————————————————————————————————————————————————————————————
-; Tests
+;; ———————————————————————————————————————————————————————————————————————————————————————————————————
+;; Tests
 
 (module+ test
   (require rackunit)
@@ -116,3 +116,4 @@
       (check-equal? (length new-days) 2)
       (check-equal? (day-date day-2) (date 2020 8 4))
       (check-equal? (day-line-number day-2) 3))))
+
