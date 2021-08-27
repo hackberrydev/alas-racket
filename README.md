@@ -28,6 +28,17 @@ the following structure (today is 2021-07-17):
 
 - [X] #work - Review open pull requests
 - [X] #work - Fix the flaky test
+
+
+...
+
+
+## 2017-03-12, Monday
+
+- [X] #work - Create a repository for the new project
+- [X] #work - Generate a new Rails project
+- [X] #work - Setup a project on NewRelic
+- [X] #work - Setup a project on Sentry
  ```
 
 The file serves as a plan for future, but also a log of past.
