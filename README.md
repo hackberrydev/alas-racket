@@ -1,4 +1,4 @@
-# alas
+# Alas
 
 Alas is a system for planning your days and a tool to help you with that. With
 Alas, you keep your plan organized by days in a **single** Markdown file, with
