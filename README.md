@@ -85,3 +85,10 @@ Execute the following command to run tests:
 ```bash
 raco test .
 ```
+
+## Contributing
+
+Do you want to contribute to the project? Great! Before writing any code, please
+get in touch by sending me an email to strika@hackberry.dev.
+
+Feel free to check the list of existing issues or propose new features.
