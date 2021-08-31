@@ -1,9 +1,10 @@
 # Ignore the executable
 main
+main.exe
 
 compiled/
-distribution/
+distribution*/
 
-alas.tar
+alas*.tar
 
 tags
