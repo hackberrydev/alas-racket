@@ -1,10 +1,4 @@
-# Ignore the executable
-main
-main.exe
-
 compiled/
-distribution*/
-
-alas*.tar
+dist/
 
 tags
