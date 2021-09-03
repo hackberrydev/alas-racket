@@ -13,17 +13,17 @@ build() {
   raco cross --target $1 pkg install --skip-installed --auto gregor
 
   echo "raco exe..."
-  raco cross --target $1 exe --embed-dlls main.rkt
+  raco cross --target $1 exe --embed-dlls -o dist/main-$1 src/main.rkt
 
   echo "raco distribute..."
   if [ $1 = "x86_64-win32" ]; then
-    raco cross --target $1 distribute distribution-$1 main.exe
+    raco cross --target $1 distribute dist/distribution-$1 dist/main-$1.exe
   else
-    raco cross --target $1 distribute distribution-$1 main
+    raco cross --target $1 distribute dist/distribution-$1 dist/main-$1
   fi
 
   echo "tar..."
-  tar cvf alas-$1.tar distribution-$1/
+  tar cvf dist/alas-$1.tar dist/distribution-$1/
 
   echo "done for $1"
 }
