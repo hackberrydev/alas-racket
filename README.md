@@ -50,6 +50,14 @@ the plan management:
 alas ~/plan.md
 ```
 
+### Warning
+
+Always keep a backup of your plan file. Alas will edit your plan and you can
+loose data in case of a bug or wrong formatting.
+
+One way to keep a backup of the plan file is to put it in a version control
+system such as Git.
+
 ## Commands
 
 Alas supports the following commands.
