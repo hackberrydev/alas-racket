@@ -1,5 +1,7 @@
 # Alas
 
+This project is deprecated in favor of [Alas](https://github.com/hackberrydev/alas).
+
 Alas is a system and a tool for planning your days. With Alas, you keep your
 plan organized by days in a **single** Markdown file, with the following
 structure (today is 2021-07-17):
